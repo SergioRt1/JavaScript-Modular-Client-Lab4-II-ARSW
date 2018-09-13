@@ -1,0 +1,4 @@
+Sergio Andres Rodriguez Torres
+Analisis de Concurrencia.
+Dado que pueden estar muchos usuarios interactuando contantemente con la aplicación y esta no implementa ningun mecanismo que asegure que no se van a presentar condiciones de carrera en las operaciones que visualizan y alteran las ordenes, como eliminarlas, actualizar o consultar información de ellas, lo que puede llevar a que si dos o más usuarios considencialmente manipulan la misma mesa, esta puede terminar con datos inconcistentes.
+Para solucionar este problema se podria protejer las ordenes de forma tal en la que solo puedan se accedidas por un usuario a la vez.
