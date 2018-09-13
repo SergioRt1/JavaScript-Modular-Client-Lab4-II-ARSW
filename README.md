@@ -1,71 +1,66 @@
-# FrontEnd - JavaScript Base Client
+# JavaScript Modular Client
 
-Create a simple front end using the following frameworks:
- - [bootstrap](https://getbootstrap.com)
- - [axios](https://github.com/axios/axios)
- - [Web APIs](https://developer.mozilla.org/en-US/docs/Web/API)
 
-# Part 1: Create a basic html page using a Bootstrap template
 
-  1. Go to the boostrap examples and download the code and extract the following template:
-  https://getbootstrap.com/docs/4.0/examples/cover/
+# Part 1: Refactoring
+
+Understand the module pattern for JavaScript and make a refactoring of your code to have two layer modules (FrontEnd and Network):
+
+- Network Layer -> Implement the method *getOrders* of the *RestaurantRestController.js* using the [axios library](https://github.com/axios/axios) to make the HTTP calls to the REST API.
+ 
+    
+- FrontEnd Layer -> Implement the method *showOrdersByTable* of the *OrdersController.js*
+    
   
-  2. Update your html code to have the following menu items:
-  - orders
-  - new order
-  
- 3. Update the  content of your page (where the learn more button is located) with a table that will display the order with hardcoded values:
-  
-**Order 1:**
+Reference: https://toddmotto.com/mastering-the-module-pattern/
 
 
-  | Product | Quantity | Price | 
-  | ------------- | ----- |:-------------:| 
-  |PIZZA|3|$10000| 
-  |HOTDOG|1|$3000|
-  |COKE|4|$1300|
+# Part 2: FrontEnd implementation - Orders
 
-# Part 2: Implement the FrontEnd controller
+Modify the *index.html* page so it displays the following orders structure:
 
-1. Create a JavaScript file called  **OrdersController.js**
-2. Create a JavaScript object list that represents the table on Part 1 on the Order **OrdersController.js** (Do not forget to add an id attribute to the Order object).
+![](img/orders.png)
 
-```javascript
-{
-	"order_id": 1,
-	"table_id": 1,
-	"products": [{
-			"product": "PIZZA",
-			"quantity": 3,
-			"price": "$15.000"
-		},
-		{
-			"product": "HAMBURGER",
-			"quantity": 1,
-			"price": "$12.300"
-		}
-	]
-}
-```
+- Add the *OrdersController.js* and *RestaurantRestController.js* to the *index.html*
+- Connect the modules with your HTML code:
+    - Call the *getOrders* method of the RestaurantRestController module (You can add a log so you can verify that it actually retrieves the data from the server)
+    - Connect the two modules by calling the  *OrdersController.js* -> *showOrdersByTable* method from the *RestaurantRestController.js* once the request promise is completed.
+- Call the *showOrdersByTable* function on the [onload](https://www.w3schools.com/tags/ev_onload.asp) event so the orders load once tha page is loaded.
 
-3. Create a function that adds an order (a new table below the existing Order 1 table).
-4. Create a function that removes an order table with a given id: *removeOrderById(int id)*
-    Use the following method to start: https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
-5. Try your add order function iterating the list created on 2. and make sure the data is loaded into the table from the JavaScript code.
 
-6. Create a function that loads the orders (creates the HTML tables) from a mocked list of orders in your JavaScript file.
-Once this function is working call it from the body tag in order to invoke this function everytime the page is loaded:
+# Part 2: Orders CRUD: FrontEnd
 
-```html
-	<body onload="loadOrders();">
-```
+Create a new html page that has the following structure:
 
-# Part 3: Consume the REST API and connect it with the FrontEnd
-1. Create a function that calls the API Endpoint that retrieves the orders list using the [Axios API library](https://github.com/axios/axios)
-2. Implement the callback when the orders list is return succesfully that uses the *OrderController.js* functions.
-3. Modify the loadOrders function so it actually makes a call to the Orders API and loads the orders from the server.
-4. Implement the callback when the request fails that shows a dialog to user saying that "There is a problem with our servers. We apologize for the inconvince, please try again later" 
-5. In order to test your application do the following:
-    - Add your JavaScript file to the SpringBoot project under the resources/static/js folder (create the folder if it does not exist)
-    - Add your html page (index.html) to the resources/static folder
-6. Create a Heroku project and deploy your SpringBoot then test that it works as expected.
+![](img/update-orders.png)
+
+
+Implement the CRUD methods of the *RestaurantRestController.js* using the [axios library](https://github.com/axios/axios) to make the HTTP calls to the REST API.
+
+    - updateOrder
+    - deleteOrder
+    
+    
+Implement the remaining methods of the *OrdersController.js*
+
+    - addItemToOrder
+    - updateOrder
+    - deleteOrderItem
+    
+- Call the *getOrders* function on the [onload](https://www.w3schools.com/tags/ev_onload.asp) and store it on global variable    
+    
+Connect your html components with your controllers:
+
+   - Implement a listener for the comboBox so when you change the order then the Update Orders table changes with the corresponding items (user the orders global variable).
+   - Call the function *addItemToOrder* when the Add button is clicked (make sure you validate the submitted data)
+   - Call the function *updateOrder* when the Update button is clicked (make sure you validate the submitted data)
+   - Call the function *deleteOrderItem* when the Delete button is clicked
+   
+# Part 3: Orders CRUD: BackEnd   
+
+Implement the missing methods on your REST API in order to be able to serve your JavaScript client:
+
+- updateOrder
+- addItemToOrder
+- deleteOrderItem
+ 
