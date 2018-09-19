@@ -1,28 +1,17 @@
-var controller = (function () {
-
-    var url = '';
-
-    function getOrders() {
-        return axios.get(url + "/orders").then(function (response) {
-            return response.data;
-        })
-    }
-
-    function getProducts() {
-        return axios.get(url + "/orders/products").then(function (response) {
-            return response.data;
-        })
-    }
-
+var OrdersController = (function () {
+    
+    var numberTable = 1;
+    
     function clearTables() {
         var tables = document.getElementsByClassName("table");
         for (i = 0; i < tables.length; i++) {
             tables[i].innerHTML = "";
         }
+        numberTable = 1;
     }
 
     function addOrder(order) {
-        var tableOrder = document.getElementById("tableOrder");
+        var tableOrder = document.createElement("table");
         var header = document.createElement("tr");
         var cell = document.createElement("th");
         cell.innerHTML = "Product";
@@ -52,6 +41,13 @@ var controller = (function () {
 
             tableOrder.appendChild(row);
         }
+        var title = document.createElement("h4");
+        title.setAttribute("class","cover-heading");
+        title.innerHTML = "Table "+numberTable++;
+        var content = document.getElementById("content");
+        var firstTable = document.getElementById("HTMLtable");
+        content.insertBefore(tableOrder,firstTable);
+        content.insertBefore(title,tableOrder);
     }
 
     function loadOrders() {
@@ -60,7 +56,7 @@ var controller = (function () {
     }
 
     function loadData(callback) {
-        axios.all([getOrders(), getProducts()])
+        axios.all([RestaurantRestController.getOrders(), RestaurantRestController.getProducts()])
                 .then(axios.spread(function (orders, products) {
                     callback(orders, products);
                 }));
@@ -86,7 +82,6 @@ var controller = (function () {
         addOrder(order);
     }
     return {
-        loadOrders: loadOrders,
-        getOrders: getOrders
+        loadOrders: loadOrders
     };
 })();

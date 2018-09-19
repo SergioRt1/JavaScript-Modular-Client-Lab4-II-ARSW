@@ -18,7 +18,7 @@
         <link href="./css/style.css" rel="stylesheet">
     </head>
 
-    <body class="text-center" onload="controller.loadOrders();">
+    <body class="text-center" onload="OrdersController.loadOrders();">
 
         <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
             <header class="masthead mb-auto">
@@ -31,10 +31,10 @@
                 </div>
             </header>
 
-            <main role="main" class="inner cover">
+            <main role="main" class="inner cover" id = "content">
                 <h1 class="cover-heading">Order</h1>
                 <p class="lead">Your orders will displayed below, we hope you enjoy the dishes</p>
-                <table style="width:100%" class = "table">
+                <table style="width:100%" class = "table" id="HTMLtable">
                     <tr>
                         <th>Product</th>
                         <th>Quantity</th> 
@@ -56,9 +56,10 @@
                         <td>$1300</td>
                     </tr>
                 </table>
-                <table style="width:100%" id="tableOrder">
-                    
+                <table style="width:100%" class = "table">
+
                 </table>
+                
             </main>
 
             <footer class="mastfoot mt-auto">
@@ -78,6 +79,7 @@
         <script src="./js/popper.min.js"></script>
         <script src="./js/bootstrap.min.js"></script>
         <script type="text/javascript" src="js/OrdersController.js"></script>
+        <script type="text/javascript" src="js/RestaurantRestController.js"></script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 
