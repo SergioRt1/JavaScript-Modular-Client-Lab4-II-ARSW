@@ -1,13 +1,27 @@
 var OrdersController = (function () {
-    
+
     var numberTable = 1;
-    
+    var GlobalOrders = {};
+
     function clearTables() {
+        var content = document.getElementById("content");
         var tables = document.getElementsByClassName("table");
-        for (i = 0; i < tables.length; i++) {
-            tables[i].innerHTML = "";
+        while (tables.length > 0) {
+            content.removeChild(tables[0]);
+        }
+        var titles = document.getElementsByClassName("table-title");
+        while (titles.length > 0) {
+            content.removeChild(titles[0]);
         }
         numberTable = 1;
+    }
+
+    function clearSelectTable() {
+        var selectTable = document.getElementById("selectTable");
+        var options = document.getElementsByClassName("option-select");
+        while (options.length > 0) {
+            selectTable.removeChild(options[0]);
+        }
     }
 
     function addOrder(order) {
@@ -42,17 +56,84 @@ var OrdersController = (function () {
             tableOrder.appendChild(row);
         }
         var title = document.createElement("h4");
-        title.setAttribute("class","cover-heading");
-        title.innerHTML = "Table "+numberTable++;
-        var content = document.getElementById("content");
+        title.setAttribute("class", "table-title");
+        title.innerHTML = "Table " + numberTable++;
         var firstTable = document.getElementById("HTMLtable");
-        content.insertBefore(tableOrder,firstTable);
-        content.insertBefore(title,tableOrder);
+        content.insertBefore(tableOrder, firstTable);
+        content.insertBefore(title, tableOrder);
+    }
+
+    function loadTables(order) {
+        var selectTable = document.getElementById("selectTable");
+        var option = document.createElement("option");
+        option.innerHTML = "Table " + order.order_id;
+        selectTable.appendChild(option);
+        $('#selectTable').selectpicker('refresh');
+    }
+
+    function putInDiv(component) {
+        var newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "grid-item");
+        newDiv.appendChild(component);
+        return newDiv;
+    }
+
+    function loadList(table) {
+        var listOrders = document.getElementById("listOrders");
+        for (product in GlobalOrders[table]) {
+
+            var productName = document.createElement("span");
+            productName.setAttribute("class", "label label-default");
+            productName.innerHTML = GlobalOrders[table][product].product;
+
+            var productQuantity = document.createElement("input");
+            productQuantity.setAttribute("class", "label label-default");
+            productQuantity.setAttribute("value", GlobalOrders[table][product].quantity);
+            productQuantity.setAttribute("placeholder", "Quantity");
+
+            var updateButton = document.createElement("button");
+            updateButton.setAttribute("type", "submit");
+            updateButton.setAttribute("class", "btn btn-default");
+            updateButton.innerHTML = "Update";
+
+
+            var deleteButton = document.createElement("button");
+            deleteButton.setAttribute("type", "submit");
+            deleteButton.setAttribute("class", "btn btn-default");
+            deleteButton.innerHTML = "Delete";
+
+            listOrders.appendChild(putInDiv(productName));
+            listOrders.appendChild(putInDiv(productQuantity));
+            listOrders.appendChild(putInDiv(updateButton));
+            listOrders.appendChild(putInDiv(deleteButton));
+        }
+    }
+
+    function loadItems(orders, products) {
+        clearSelectTable();
+        GlobalOrders = {};
+        for (i in orders) {
+            var order = orderBuilder(orders[i], products);
+            loadTables(order);
+            GlobalOrders[order.table_id] = order.products;
+        }
+        loadList(orders[0].tableNumber);
+    }
+
+    function loadToUpdate() {
+        loadData(loadItems);
     }
 
     function loadOrders() {
         clearTables();
-        loadData(ordersBuilder);
+        loadData(buildOrders);
+    }
+
+    function buildOrders(orders, products) {
+        for (i in orders) {
+            var order = orderBuilder(orders[i], products);
+            addOrder(order);
+        }
     }
 
     function loadData(callback) {
@@ -62,26 +143,19 @@ var OrdersController = (function () {
                 }));
     }
 
-
-
-    function ordersBuilder(orders, products) {
-        for (i in orders) {
-            orderBuilder(orders[i], products)
-        }
-    }
-
-    function orderBuilder(orderJson, products) {
+    function orderBuilder(orderJson, productsJson) {
         var order = {order_id: orderJson.tableNumber, table_id: orderJson.tableNumber, products: []};
         for (productName in orderJson.orderAmountsMap) {
             var prod = {"product": productName, "quantity": orderJson.orderAmountsMap[productName], "price": null}
-            prod.price = products.filter(function (x) {
+            prod.price = productsJson.filter(function (x) {
                 return x.name === productName;
             })[0].price;
             order.products.push(prod);
         }
-        addOrder(order);
+        return order;
     }
     return {
-        loadOrders: loadOrders
+        loadOrders: loadOrders,
+        loadToUpdate: loadToUpdate
     };
 })();

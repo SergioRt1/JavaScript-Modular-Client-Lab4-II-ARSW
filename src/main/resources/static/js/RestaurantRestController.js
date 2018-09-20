@@ -14,7 +14,6 @@ var RestaurantRestController = (function (){
     }
     
     
-    
     return {
         getOrders: getOrders,
         getProducts: getProducts
