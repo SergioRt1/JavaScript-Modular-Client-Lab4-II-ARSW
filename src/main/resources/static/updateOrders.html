@@ -38,7 +38,8 @@
                 <form id="formInset">
                     <div class="grid-container">
                         <div class="grid-item">
-                            <select class="selectpicker" id = "selectTable">
+                            <select class="selectpicker" id = "selectTable" onchange="OrdersController.loadList()">
+                                <option value="" disabled selected style="display:none;">Select a table</option>
                                 <option class = "option-select">Table 1</option>
                                 <option class = "option-select">Table 2</option>
                                 <option class = "option-select">Table 3</option>
@@ -47,9 +48,14 @@
                         <div class="grid-item">
                             <div class="grid-container">
                                 <div class="grid-item">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="Item Name">
-                                    </div>
+
+                                    <!--<input type="text" class="form-control" placeholder="Item Name">-->
+                                    <select class="selectpicker" id = "ItemName">
+                                        <option value="" disabled selected style="display:none;">Item Name</option>
+                                        <option class = "product-select">Table 1</option>
+                                        <option class = "product-select">Table 2</option>
+                                        <option class = "product-select">Table 3</option>
+                                    </select>
                                     <div class="form-group">
                                         <input type="text" class="form-control" placeholder="Quantity">
                                     </div>
@@ -63,7 +69,7 @@
                 </form>
 
                 <p class="lead">Update your items</p>
-                
+
                 <from id="formUpdate">
                     <div class="grid-container" id="listOrders">
                         <div class="grid-item">

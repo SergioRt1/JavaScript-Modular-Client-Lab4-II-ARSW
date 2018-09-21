@@ -13,9 +13,24 @@ var RestaurantRestController = (function (){
         })
     }
     
+    function updateOrder() {
+        return axios.get(url + "/orders").then(function (response) {
+            return response.data;
+        })
+    }
+    
+    function deleteOrder(orderId) {
+        return axios.get(url + "/orders").then(function (response) {
+            return response.data;
+        })
+    }
+    
+    
     
     return {
         getOrders: getOrders,
-        getProducts: getProducts
+        getProducts: getProducts,
+        updateOrder: updateOrder,
+        deleteOrder: deleteOrder
     };
 })();

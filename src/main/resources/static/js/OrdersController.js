@@ -22,6 +22,20 @@ var OrdersController = (function () {
         while (options.length > 0) {
             selectTable.removeChild(options[0]);
         }
+        var selectProducts = document.getElementById("ItemName");
+        var options = document.getElementsByClassName("product-select");
+        while (options.length > 0) {
+            selectProducts.removeChild(options[0]);
+        }
+    }
+    
+    function clearList(){
+        var listOrders = document.getElementById("listOrders");
+        var options = document.getElementsByClassName("product-displayed");
+        while (options.length > 0) {
+            listOrders.removeChild(options[0]);
+        }
+    
     }
 
     function addOrder(order) {
@@ -62,23 +76,37 @@ var OrdersController = (function () {
         content.insertBefore(tableOrder, firstTable);
         content.insertBefore(title, tableOrder);
     }
+    
+    function loadProducts(product) {
+        var selectTable = document.getElementById("ItemName");
+        var option = document.createElement("option");
+        option.setAttribute("class","product-select");
+        option.innerHTML = product.name;
+        selectTable.appendChild(option);
+        $('#ItemName').selectpicker('refresh');
+    }
 
     function loadTables(order) {
         var selectTable = document.getElementById("selectTable");
         var option = document.createElement("option");
         option.innerHTML = "Table " + order.order_id;
+        option.setAttribute("class","option-select");
         selectTable.appendChild(option);
         $('#selectTable').selectpicker('refresh');
     }
 
     function putInDiv(component) {
         var newDiv = document.createElement("div");
-        newDiv.setAttribute("class", "grid-item");
+        newDiv.setAttribute("class", "grid-item product-displayed");
         newDiv.appendChild(component);
         return newDiv;
     }
 
-    function loadList(table) {
+    function loadList() {
+        clearList();
+        var selectedTable = document.getElementById("selectTable");
+        var tableLabel = selectedTable.options[selectedTable.selectedIndex].value;
+        var table = tableLabel.match(/(\d+)/g)[0];
         var listOrders = document.getElementById("listOrders");
         for (product in GlobalOrders[table]) {
 
@@ -117,7 +145,9 @@ var OrdersController = (function () {
             loadTables(order);
             GlobalOrders[order.table_id] = order.products;
         }
-        loadList(orders[0].tableNumber);
+        for (i in products){
+            loadProducts(products[i]);
+        }
     }
 
     function loadToUpdate() {
@@ -156,6 +186,7 @@ var OrdersController = (function () {
     }
     return {
         loadOrders: loadOrders,
-        loadToUpdate: loadToUpdate
+        loadToUpdate: loadToUpdate,
+        loadList: loadList
     };
 })();
