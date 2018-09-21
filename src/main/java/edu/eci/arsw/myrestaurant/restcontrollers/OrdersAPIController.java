@@ -67,14 +67,18 @@ public class OrdersAPIController {
 
     @RequestMapping("/{idtable}")
     public ResponseEntity<?> getOrderHandler(@PathVariable int idtable) {
-        Order order = ros.getTableOrder(idtable);
         HttpStatus status = HttpStatus.ACCEPTED;
-        if (order == null) {
+        Order order = null;
+        try {
+            order = ros.getTableOrder(idtable);
+        } catch (OrderServicesException ex) {
             status = HttpStatus.BAD_REQUEST;
         }
+
         return new ResponseEntity<>(order, status);
 
     }
+
     //Example code Linux
     //curl -i -X POST -HContent-Type:application/json -HAccept:application/json http://localhost:8080/orders -d '{"orderAmountsMap":{"FISH":1,"POTATOES":5},"tableNumber":5}'
     @RequestMapping(method = RequestMethod.POST)
@@ -101,9 +105,9 @@ public class OrdersAPIController {
         return new ResponseEntity<>(total, status);
 
     }
-    
+
     @RequestMapping("/products")
-    public ResponseEntity<?> getProducts(){
+    public ResponseEntity<?> getProducts() {
         HttpStatus status = HttpStatus.ACCEPTED;
         Collection<RestaurantProduct> entry = null;
         try {
@@ -111,23 +115,50 @@ public class OrdersAPIController {
         } catch (OrderServicesException ex) {
             status = HttpStatus.BAD_REQUEST;
         }
-        return new ResponseEntity<>(entry,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(entry, HttpStatus.ACCEPTED);
     }
+
     //Example code Linux: 
-    //curl -i -X PUT -HContent-Type:application/json -HAccept:application/json http://localhost:8080/orders/1 -d '{"price":20,"name":"MILK","type":"DRINK"}' 
-    @PutMapping("/{idTable}")
-    public ResponseEntity<?> putProductHandler(@RequestBody RestaurantProduct product, @PathVariable int idTable) {
-        Order order = ros.getTableOrder(idTable);
-        order.addDish(product.getName(), 1);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    //curl -i -X PUT -HContent-Type:application/json -HAccept:application/json http://localhost:8080/orders/1 -d '{"price":20,"name":"MILK","type":"DRINK"}'
+    
+    @PutMapping("/{idTable}/{quantity}")
+    public ResponseEntity<?> putProductHandler(@RequestBody RestaurantProduct product, @PathVariable("idTable") int idTable, @PathVariable("quantity") int quantity) {
+        HttpStatus status = HttpStatus.CREATED;
+        try {
+            Order order = ros.getTableOrder(idTable);
+            if(quantity <= 0){
+                order.deleteDish(product.getName());
+            }else{
+                order.updateDish(product.getName(), quantity);
+            }
+        } catch (OrderServicesException ex) {
+            status = HttpStatus.FORBIDDEN;
+        }
+        return new ResponseEntity<>(status);
 
     }
-    
-    @DeleteMapping("/{idTable}")
-    public ResponseEntity<?> deleteProductHandler(@PathVariable int idTable) {
-        HttpStatus status;
+
+    @RequestMapping(method = RequestMethod.POST, value = "/{idTable}/{quantity}")
+    public ResponseEntity<?> postProductHandler(@RequestBody RestaurantProduct product, @PathVariable("idTable") int idTable, @PathVariable("quantity") int quantity) {
+        HttpStatus status = HttpStatus.CREATED;
         try {
-            ros.releaseTable(idTable);
+            if(quantity > 0){
+                Order order = ros.getTableOrder(idTable);
+                order.addDish(product.getName(), quantity);
+            }
+        } catch (OrderServicesException ex) {
+            status = HttpStatus.FORBIDDEN;
+        }
+        return new ResponseEntity<>(status);
+
+    }
+    @DeleteMapping("/{idTable}/{itemName}")
+    public ResponseEntity<?> deleteProductHandler(@PathVariable("idTable") int idTable, @PathVariable("itemName") String itemName) {
+        HttpStatus status;
+
+        try {
+            Order order = ros.getTableOrder(idTable);
+            order.deleteDish(itemName);
             status = HttpStatus.ACCEPTED;
         } catch (OrderServicesException ex) {
             status = HttpStatus.BAD_REQUEST;
@@ -135,6 +166,5 @@ public class OrdersAPIController {
         return new ResponseEntity<>(status);
 
     }
-    
 
 }

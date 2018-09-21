@@ -28,14 +28,14 @@ var OrdersController = (function () {
             selectProducts.removeChild(options[0]);
         }
     }
-    
-    function clearList(){
+
+    function clearList() {
         var listOrders = document.getElementById("listOrders");
         var options = document.getElementsByClassName("product-displayed");
         while (options.length > 0) {
             listOrders.removeChild(options[0]);
         }
-    
+
     }
 
     function addOrder(order) {
@@ -76,11 +76,11 @@ var OrdersController = (function () {
         content.insertBefore(tableOrder, firstTable);
         content.insertBefore(title, tableOrder);
     }
-    
+
     function loadProducts(product) {
         var selectTable = document.getElementById("ItemName");
         var option = document.createElement("option");
-        option.setAttribute("class","product-select");
+        option.setAttribute("class", "product-select");
         option.innerHTML = product.name;
         selectTable.appendChild(option);
         $('#ItemName').selectpicker('refresh');
@@ -90,7 +90,7 @@ var OrdersController = (function () {
         var selectTable = document.getElementById("selectTable");
         var option = document.createElement("option");
         option.innerHTML = "Table " + order.order_id;
-        option.setAttribute("class","option-select");
+        option.setAttribute("class", "option-select");
         selectTable.appendChild(option);
         $('#selectTable').selectpicker('refresh');
     }
@@ -101,12 +101,17 @@ var OrdersController = (function () {
         newDiv.appendChild(component);
         return newDiv;
     }
-
-    function loadList() {
-        clearList();
+    
+    function getSelectedTable(){
         var selectedTable = document.getElementById("selectTable");
         var tableLabel = selectedTable.options[selectedTable.selectedIndex].value;
         var table = tableLabel.match(/(\d+)/g)[0];
+        return table;
+    }
+
+    function loadList() {
+        clearList(); 
+        var table = getSelectedTable();
         var listOrders = document.getElementById("listOrders");
         for (product in GlobalOrders[table]) {
 
@@ -121,12 +126,14 @@ var OrdersController = (function () {
 
             var updateButton = document.createElement("button");
             updateButton.setAttribute("type", "submit");
+            updateButton.setAttribute("name", GlobalOrders[table][product].product);
             updateButton.setAttribute("class", "btn btn-default");
             updateButton.innerHTML = "Update";
 
 
             var deleteButton = document.createElement("button");
             deleteButton.setAttribute("type", "submit");
+            deleteButton.setAttribute("name", GlobalOrders[table][product].product);
             deleteButton.setAttribute("class", "btn btn-default");
             deleteButton.innerHTML = "Delete";
 
@@ -135,6 +142,20 @@ var OrdersController = (function () {
             listOrders.appendChild(putInDiv(updateButton));
             listOrders.appendChild(putInDiv(deleteButton));
         }
+    }
+    
+    function deleteDish(){
+        
+    }
+    
+    function addDish(){
+        var selectName = document.getElementById("ItemName");
+        var itemName = selectName.options[selectName.selectedIndex].value;
+        var quantityInput = document.getElementById("quantity");
+        var quenatity = quantityInput;
+        var table = getSelectedTable();
+        RestaurantRestController.addDish(table,quenatity);
+        
     }
 
     function loadItems(orders, products) {
@@ -145,7 +166,7 @@ var OrdersController = (function () {
             loadTables(order);
             GlobalOrders[order.table_id] = order.products;
         }
-        for (i in products){
+        for (i in products) {
             loadProducts(products[i]);
         }
     }
@@ -187,6 +208,7 @@ var OrdersController = (function () {
     return {
         loadOrders: loadOrders,
         loadToUpdate: loadToUpdate,
-        loadList: loadList
+        loadList: loadList,
+        addDish: addDish
     };
 })();

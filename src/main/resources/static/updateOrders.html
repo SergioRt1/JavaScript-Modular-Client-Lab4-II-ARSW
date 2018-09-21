@@ -35,16 +35,16 @@
             <main role="main" class="inner cover" id = "content">
                 <h1 class="cover-heading">Update Orders</h1>
                 <p class="lead">Select your table and the item description to add a new item to your table.</p>
-                <form id="formInset">
-                    <div class="grid-container">
-                        <div class="grid-item">
-                            <select class="selectpicker" id = "selectTable" onchange="OrdersController.loadList()">
-                                <option value="" disabled selected style="display:none;">Select a table</option>
-                                <option class = "option-select">Table 1</option>
-                                <option class = "option-select">Table 2</option>
-                                <option class = "option-select">Table 3</option>
-                            </select>
-                        </div>
+                <div class="grid-container">
+                    <div class="grid-item">
+                        <select class="selectpicker" id = "selectTable" onchange="OrdersController.loadList()">
+                            <option value="" disabled selected style="display:none;">Select a table</option>
+                            <option class = "option-select">Table 1</option>
+                            <option class = "option-select">Table 2</option>
+                            <option class = "option-select">Table 3</option>
+                        </select>
+                    </div>
+                    <form id="formInset">
                         <div class="grid-item">
                             <div class="grid-container">
                                 <div class="grid-item">
@@ -57,16 +57,16 @@
                                         <option class = "product-select">Table 3</option>
                                     </select>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="Quantity">
+                                        <input type="text" id="quantity" class="form-control" placeholder="Quantity">
                                     </div>
                                 </div>
                                 <div class="grid-item">
-                                    <button type="submit" class="btn btn-default">Add</button>
+                                    <button type="submit" class="btn btn-default" onclick="OrdersController.addDish()">Add</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
 
                 <p class="lead">Update your items</p>
 

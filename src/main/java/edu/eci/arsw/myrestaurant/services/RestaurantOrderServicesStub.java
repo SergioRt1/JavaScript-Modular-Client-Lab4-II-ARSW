@@ -25,9 +25,9 @@ public class RestaurantOrderServicesStub implements RestaurantOrderServices {
     }
 
     @Override
-    public Order getTableOrder(int tableNumber) {
+    public Order getTableOrder(int tableNumber) throws OrderServicesException{
         if (!tableOrders.containsKey(tableNumber)) {
-            return null;
+            throw new OrderServicesException("El numero de la tabla no corresponde a ninguno reservado");
         } else {
             return tableOrders.get(tableNumber);
         }

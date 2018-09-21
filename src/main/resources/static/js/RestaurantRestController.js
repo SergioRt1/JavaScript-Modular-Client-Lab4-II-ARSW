@@ -13,16 +13,16 @@ var RestaurantRestController = (function (){
         })
     }
     
-    function updateOrder() {
-        return axios.get(url + "/orders").then(function (response) {
-            return response.data;
-        })
+    function updateOrder(orderId,quantity) {
+        axios.put(url + "/orders/"+orderId+"/"+quantity, product);
     }
     
-    function deleteOrder(orderId) {
-        return axios.get(url + "/orders").then(function (response) {
-            return response.data;
-        })
+    function deleteOrder(orderId,itemName) {
+        axios.delete(url + "/orders/"+orderId+"/"+itemName);
+    }
+    
+    function addDish(orderId,quantity) {
+        axios.post(url + "/orders/"+orderId+"/"+quantity, product);
     }
     
     
