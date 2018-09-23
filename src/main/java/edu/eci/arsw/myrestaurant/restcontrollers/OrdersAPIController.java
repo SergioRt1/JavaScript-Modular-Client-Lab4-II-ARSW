@@ -121,15 +121,15 @@ public class OrdersAPIController {
     //Example code Linux: 
     //curl -i -X PUT -HContent-Type:application/json -HAccept:application/json http://localhost:8080/orders/1 -d '{"price":20,"name":"MILK","type":"DRINK"}'
     
-    @PutMapping("/{idTable}/{quantity}")
-    public ResponseEntity<?> putProductHandler(@RequestBody RestaurantProduct product, @PathVariable("idTable") int idTable, @PathVariable("quantity") int quantity) {
+    @PutMapping("/{idTable}/{quantity}/{productName}")
+    public ResponseEntity<?> putProductHandler(@PathVariable("productName") String productName, @PathVariable("idTable") int idTable, @PathVariable("quantity") int quantity) {
         HttpStatus status = HttpStatus.CREATED;
         try {
             Order order = ros.getTableOrder(idTable);
             if(quantity <= 0){
-                order.deleteDish(product.getName());
+                order.deleteDish(productName);
             }else{
-                order.updateDish(product.getName(), quantity);
+                order.updateDish(productName, quantity);
             }
         } catch (OrderServicesException ex) {
             status = HttpStatus.FORBIDDEN;
@@ -138,13 +138,13 @@ public class OrdersAPIController {
 
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/{idTable}/{quantity}")
-    public ResponseEntity<?> postProductHandler(@RequestBody RestaurantProduct product, @PathVariable("idTable") int idTable, @PathVariable("quantity") int quantity) {
+    @RequestMapping(method = RequestMethod.POST, value = "/{idTable}/{quantity}/{productName}")
+    public ResponseEntity<?> postProductHandler(@PathVariable("productName") String productName , @PathVariable("idTable") int idTable, @PathVariable("quantity") int quantity) {
         HttpStatus status = HttpStatus.CREATED;
         try {
             if(quantity > 0){
                 Order order = ros.getTableOrder(idTable);
-                order.addDish(product.getName(), quantity);
+                order.addDish(productName, quantity);
             }
         } catch (OrderServicesException ex) {
             status = HttpStatus.FORBIDDEN;

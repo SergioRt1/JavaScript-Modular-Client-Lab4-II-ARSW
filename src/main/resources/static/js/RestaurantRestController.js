@@ -13,16 +13,22 @@ var RestaurantRestController = (function (){
         })
     }
     
-    function updateOrder(orderId,quantity) {
-        axios.put(url + "/orders/"+orderId+"/"+quantity, product);
+    function updateOrder(orderId,quantity,productName,callBack) {
+        axios.put(url + "/orders/"+orderId+"/"+quantity+"/"+productName).then(function (response){
+            callBack(orderId,productName,quantity);
+        });
     }
     
-    function deleteOrder(orderId,itemName) {
-        axios.delete(url + "/orders/"+orderId+"/"+itemName);
+    function deleteOrder(orderId,itemName,callBack) {
+        axios.delete(url + "/orders/"+orderId+"/"+itemName).then(function (response){
+            callBack(orderId,itemName);
+        });
     }
     
-    function addDish(orderId,quantity) {
-        axios.post(url + "/orders/"+orderId+"/"+quantity, product);
+    function addDish(orderId,quantity,productName,callBack) {
+        axios.post(url + "/orders/"+orderId+"/"+quantity+"/"+productName).then(function (response){
+            callBack(orderId,productName,quantity);
+        });
     }
     
     
@@ -31,6 +37,7 @@ var RestaurantRestController = (function (){
         getOrders: getOrders,
         getProducts: getProducts,
         updateOrder: updateOrder,
-        deleteOrder: deleteOrder
+        deleteOrder: deleteOrder,
+        addDish: addDish
     };
 })();

@@ -44,49 +44,50 @@
                             <option class = "option-select">Table 3</option>
                         </select>
                     </div>
-                    <form id="formInset">
-                        <div class="grid-item">
-                            <div class="grid-container">
-                                <div class="grid-item">
+                    <fieldset>
+                        <form id="formInset">
+                            <div class="grid-item">
+                                <div class="grid-container">
+                                    <div class="grid-item">
 
-                                    <!--<input type="text" class="form-control" placeholder="Item Name">-->
-                                    <select class="selectpicker" id = "ItemName">
-                                        <option value="" disabled selected style="display:none;">Item Name</option>
-                                        <option class = "product-select">Table 1</option>
-                                        <option class = "product-select">Table 2</option>
-                                        <option class = "product-select">Table 3</option>
-                                    </select>
-                                    <div class="form-group">
-                                        <input type="text" id="quantity" class="form-control" placeholder="Quantity">
+                                        <!--<input type="text" class="form-control" placeholder="Item Name">-->
+                                        <select class="selectpicker" id = "ItemName">
+                                            <option value="" disabled selected style="display:none;">Item Name</option>
+                                            <option class = "product-select">Table 1</option>
+                                            <option class = "product-select">Table 2</option>
+                                            <option class = "product-select">Table 3</option>
+                                        </select>
+                                        <div class="form-group">
+                                            <input type="text" id="quantity" class="form-control" placeholder="Quantity">
+                                        </div>
+                                    </div>
+                                    <div class="grid-item">
+                                        <button type="submit" class="btn btn-default" onclick="OrdersController.addItemToOrder()">Add</button>
                                     </div>
                                 </div>
-                                <div class="grid-item">
-                                    <button type="submit" class="btn btn-default" onclick="OrdersController.addDish()">Add</button>
-                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </fieldset>
                 </div>
 
                 <p class="lead">Update your items</p>
+                <fieldset>
+                    <from id="formUpdate">
+                        <div class="grid-container" id="listOrders">
+                            <div class="grid-item">
+                                <h4 class="cover-heading" style="font-weight: bold;">Item</h4>
+                            </div>
+                            <div class="grid-item">
+                                <h4 class="cover-heading" style="font-weight: bold;">Quantity</h4>
+                            </div>
+                            <div class="grid-item">
+                            </div>
+                            <div class="grid-item">
+                            </div>
 
-                <from id="formUpdate">
-                    <div class="grid-container" id="listOrders">
-                        <div class="grid-item">
-                            <h4 class="cover-heading" style="font-weight: bold;">Item</h4>
                         </div>
-                        <div class="grid-item">
-                            <h4 class="cover-heading" style="font-weight: bold;">Quantity</h4>
-                        </div>
-                        <div class="grid-item">
-                        </div>
-                        <div class="grid-item">
-                        </div>
-
-                    </div>
-                </from>
-
-
+                    </from>
+                </fieldset>
             </main>
 
             <footer class="mastfoot mt-auto">

@@ -101,8 +101,8 @@ var OrdersController = (function () {
         newDiv.appendChild(component);
         return newDiv;
     }
-    
-    function getSelectedTable(){
+
+    function getSelectedTable() {
         var selectedTable = document.getElementById("selectTable");
         var tableLabel = selectedTable.options[selectedTable.selectedIndex].value;
         var table = tableLabel.match(/(\d+)/g)[0];
@@ -110,24 +110,28 @@ var OrdersController = (function () {
     }
 
     function loadList() {
-        clearList(); 
+        clearList();
         var table = getSelectedTable();
         var listOrders = document.getElementById("listOrders");
         for (product in GlobalOrders[table]) {
 
             var productName = document.createElement("span");
             productName.setAttribute("class", "label label-default");
+            productName.setAttribute("id", "name " + product);
             productName.innerHTML = GlobalOrders[table][product].product;
 
             var productQuantity = document.createElement("input");
             productQuantity.setAttribute("class", "label label-default");
             productQuantity.setAttribute("value", GlobalOrders[table][product].quantity);
             productQuantity.setAttribute("placeholder", "Quantity");
+            productQuantity.setAttribute("id", "quantity " + product);
 
             var updateButton = document.createElement("button");
             updateButton.setAttribute("type", "submit");
             updateButton.setAttribute("name", GlobalOrders[table][product].product);
             updateButton.setAttribute("class", "btn btn-default");
+            updateButton.setAttribute("id", "update " + product);
+            updateButton.setAttribute("onclick", "OrdersController.updateOrderItem(this.id)");
             updateButton.innerHTML = "Update";
 
 
@@ -135,6 +139,8 @@ var OrdersController = (function () {
             deleteButton.setAttribute("type", "submit");
             deleteButton.setAttribute("name", GlobalOrders[table][product].product);
             deleteButton.setAttribute("class", "btn btn-default");
+            deleteButton.setAttribute("id", "delete " + product);
+            deleteButton.setAttribute("onclick", "OrdersController.deleteOrderItem(this.id)");
             deleteButton.innerHTML = "Delete";
 
             listOrders.appendChild(putInDiv(productName));
@@ -143,19 +149,47 @@ var OrdersController = (function () {
             listOrders.appendChild(putInDiv(deleteButton));
         }
     }
-    
-    function deleteDish(){
-        
-    }
-    
-    function addDish(){
-        var selectName = document.getElementById("ItemName");
-        var itemName = selectName.options[selectName.selectedIndex].value;
-        var quantityInput = document.getElementById("quantity");
-        var quenatity = quantityInput;
+
+    function deleteOrderItem(idButton) {
+        var productId = idButton.match(/(\d+)/g)[0];
+        var productName = document.getElementById("name " + productId).innerText;
         var table = getSelectedTable();
-        RestaurantRestController.addDish(table,quenatity);
-        
+        GlobalOrders[table].splice(productId,1);
+        RestaurantRestController.deleteOrder(table, productName, helperDelete);
+
+    }
+
+    function updateOrderItem(idButton) {
+        var productId = idButton.match(/(\d+)/g)[0];
+        var table = getSelectedTable();
+        var productName = document.getElementById("name " + productId).innerText;
+        var quantity = document.getElementById("quantity " + productId).value;
+        GlobalOrders[table][productId].quantity = quantity;
+        RestaurantRestController.updateOrder(table, quantity, productName, helperUpdate);
+    }
+
+    function addItemToOrder() {
+        var selectName = document.getElementById("ItemName");
+        var productName = selectName.options[selectName.selectedIndex].value;
+        var quantityInput = document.getElementById("quantity");
+        var quantity = quantityInput.value;
+        var table = getSelectedTable();
+        RestaurantRestController.addDish(table, quantity, productName, helperAdd);
+    }
+
+    function helperDelete(table, productName) {
+        loadList();
+        alert("Deleted in Table " + table + " " + productName);
+    }
+
+    function helperUpdate(table, productName, quantity) {
+        loadList();
+        alert("Updated in Table " + table + " " + productName + " x " + quantity);
+    }
+
+    function helperAdd(table, productName, quantity) {
+        loadList();
+        alert("Added in Table " + table + " " + productName + " x " + quantity);
     }
 
     function loadItems(orders, products) {
@@ -209,6 +243,8 @@ var OrdersController = (function () {
         loadOrders: loadOrders,
         loadToUpdate: loadToUpdate,
         loadList: loadList,
-        addDish: addDish
+        addItemToOrder: addItemToOrder,
+        updateOrderItem: updateOrderItem,
+        deleteOrderItem: deleteOrderItem
     };
 })();
